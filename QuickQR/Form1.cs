@@ -25,9 +25,7 @@ namespace QuickQR
         private void InitializeAppearance()
         {
             this.StartPosition = FormStartPosition.CenterScreen;
-            var size = Math.Min(this.Width, this.Height);
-            this.Width = size;
-            this.Height = size;
+            this.Width = this.Height - 20;
             this.Text = "QuickQR";
         }
 
