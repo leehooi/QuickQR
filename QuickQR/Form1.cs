@@ -43,17 +43,25 @@ namespace QuickQR
 
         private void PaintQR(string str)
         {
+            var graphics = this.CreateGraphics();
+            graphics.Clear(Color.White);
             if (string.IsNullOrEmpty(str))
             {
+                graphics.DrawString("Clipboard text is empty.", SystemFonts.DefaultFont, Brushes.Black, graphics.VisibleClipBounds);
                 return;
             }
-            var graphics = this.CreateGraphics();
-            QrEncoder qrEncoder = new QrEncoder(ErrorCorrectionLevel.L);
-            QrCode qrCode = qrEncoder.Encode(str);
-            var moduleSize = new FixedCodeSize(Math.Min((int)graphics.VisibleClipBounds.Width, (int)graphics.VisibleClipBounds.Height), QuietZoneModules.Two);
-            GraphicsRenderer render = new GraphicsRenderer(moduleSize, Brushes.Black, Brushes.White);
-            graphics.Clear(Color.White);
-            render.Draw(graphics, qrCode.Matrix);
+            try
+            {
+                QrEncoder qrEncoder = new QrEncoder(ErrorCorrectionLevel.L);
+                QrCode qrCode = qrEncoder.Encode(str);
+                var moduleSize = new FixedCodeSize(Math.Min((int)graphics.VisibleClipBounds.Width, (int)graphics.VisibleClipBounds.Height), QuietZoneModules.Two);
+                GraphicsRenderer render = new GraphicsRenderer(moduleSize, Brushes.Black, Brushes.White);
+                render.Draw(graphics, qrCode.Matrix);
+            }
+            catch (Exception e)
+            {
+                graphics.DrawString(e.Message, SystemFonts.DefaultFont, Brushes.Black, graphics.VisibleClipBounds);
+            }
         }
     }
 }
